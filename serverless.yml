@@ -1,0 +1,29 @@
+service: serverless-sqs-lambda
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+functions:
+  sendToSQS:
+    handler: handler.sendMessage
+    environment:
+      SQS_QUEUE_URL:
+        Ref: MessageQueue
+    events:
+      - http:
+          path: send
+          method: post
+
+resources:
+  Resources:
+    MessageQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: MyQueue
+
+  Outputs:
+    SQSQueueUrl:
+      Value:
+        Ref: MessageQueue
