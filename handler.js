@@ -2,10 +2,23 @@ const AWS = require('aws-sdk');
 const sqs = new AWS.SQS();
 
 module.exports.sendMessage = async (event) => {
-  const body = JSON.parse(event.body);
+  let body;
+  
+  try {
+    // body = JSON.parse(event.body); // Parsing the request body
+  } catch (error) {
+    console.error('Error parsing JSON:', error);
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        error: 'Invalid JSON format',
+      }),
+    };
+  }
+
   const params = {
     QueueUrl: process.env.SQS_QUEUE_URL,
-    MessageBody: JSON.stringify(body),
+    MessageBody: "JSON.stringify(body)",
   };
 
   try {
